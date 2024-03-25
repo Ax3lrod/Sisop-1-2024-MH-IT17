@@ -958,20 +958,10 @@ masalahnya adalah pada CPU dan GPU yang overload karena gaming dan streaming seh
 
 Buatlah program monitoring resource pada PC kalian. Cukup monitoring ram dan monitoring size suatu directory. Untuk ram gunakan command `free -m`. Untuk disk gunakan command `du -sh <target_path>`. Catat semua metrics yang didapatkan dari hasil `free -m`. Untuk hasil `du -sh <target_path>` catat size dari path directory tersebut. Untuk target_path yang akan dimonitor adalah /home/{user}/.
 
-a. Masukkan semua metrics ke dalam suatu file log bernama
-metrics_{YmdHms}.log. {YmdHms} adalah waktu disaat file script bash
-kalian dijalankan. Misal dijalankan pada 2024-03-20 15:00:00, maka file log
-yang akan tergenerate adalah metrics_20240320150000.log.
-b. Script untuk mencatat metrics diatas diharapkan dapat berjalan otomatis pada
-setiap menit.
-c. Kemudian, buat satu script untuk membuat agregasi file log ke satuan jam.
-Script agregasi akan memiliki info dari file-file yang tergenerate tiap menit.
-Dalam hasil file agregasi tersebut, terdapat nilai minimum, maximum, dan
-rata-rata dari tiap-tiap metrics. File agregasi akan ditrigger untuk dijalankan
-setiap jam secara otomatis. Berikut contoh nama file hasil agregasi
-metrics_agg_2024032015.log dengan format metrics_agg_{YmdH}.log
-d. Karena file log bersifat sensitif pastikan semua file log hanya dapat dibaca
-oleh user pemilik file.
+a. Masukkan semua metrics ke dalam suatu file log bernama metrics_{YmdHms}.log. {YmdHms} adalah waktu disaat file script bash kalian dijalankan. Misal dijalankan pada 2024-03-20 15:00:00, maka file log yang akan tergenerate adalah metrics_20240320150000.log.
+b. Script untuk mencatat metrics diatas diharapkan dapat berjalan otomatis pada setiap menit.
+c. Kemudian, buat satu script untuk membuat agregasi file log ke satuan jam. Script agregasi akan memiliki info dari file-file yang tergenerate tiap menit. Dalam hasil file agregasi tersebut, terdapat nilai minimum, maximum, dan rata-rata dari tiap-tiap metrics. File agregasi akan ditrigger untuk dijalankan setiap jam secara otomatis. Berikut contoh nama file hasil agregasi metrics_agg_2024032015.log dengan format metrics_agg_{YmdH}.log
+d. Karena file log bersifat sensitif pastikan semua file log hanya dapat dibaca oleh user pemilik file.
 
 Note:
 - Nama file untuk script per menit adalah minute_log.sh
