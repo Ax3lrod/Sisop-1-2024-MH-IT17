@@ -1117,5 +1117,3 @@ chmod 600 "$log_file"
 ```
 - Mengatur *permission* untuk *file_log*.
 - 600 bermakna 6 (pemilik file berhak untuk membaca dan menulis file), 0 (grup tidak memiliki hak apapun), dan 0 (pengguna lain juga tidak memiliki hak apapun).
-
-### aggregate_minutes_to_hourly_log.sh
