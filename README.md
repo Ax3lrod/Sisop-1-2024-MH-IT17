@@ -953,15 +953,15 @@ Dengan demikian, skrip ini bertujuan untuk mengekstrak pesan tersembunyi dari ga
 
 ## Nomor 4
 
-Stitch sangat senang dengan PC di rumahnya. Suatu hari, PC nya secara tiba-tiba nge-freeze 🤯 Tentu saja, Stitch adalah seorang streamer yang harus setiap hari harus bermain game dan streaming. Akhirnya, dia membawa PC nya ke tukang servis untuk diperbaiki. Setelah selesai diperbaiki, ternyata biaya perbaikan sangat mahal sehingga dia harus menggunakan uang hasil tabungan nya untuk membayarnya. Menurut tukang servis,
+Stitch sangat senang dengan PC di rumahnya. Suatu hari, PC nya secara tiba-tiba nge-freeze. Tentu saja, Stitch adalah seorang streamer yang harus setiap hari harus bermain game dan streaming. Akhirnya, dia membawa PC nya ke tukang servis untuk diperbaiki. Setelah selesai diperbaiki, ternyata biaya perbaikan sangat mahal sehingga dia harus menggunakan uang hasil tabungan nya untuk membayarnya. Menurut tukang servis,
 masalahnya adalah pada CPU dan GPU yang overload karena gaming dan streaming sehingga mengakibatkan freeze pada PC nya. Agar masalah ini tidak terulang kembali, Stitch meminta kamu untuk membuat sebuah program monitoring resource yang tersedia pada komputer.
 
 Buatlah program monitoring resource pada PC kalian. Cukup monitoring ram dan monitoring size suatu directory. Untuk ram gunakan command `free -m`. Untuk disk gunakan command `du -sh <target_path>`. Catat semua metrics yang didapatkan dari hasil `free -m`. Untuk hasil `du -sh <target_path>` catat size dari path directory tersebut. Untuk target_path yang akan dimonitor adalah /home/{user}/.
 
-a. Masukkan semua metrics ke dalam suatu file log bernama metrics_{YmdHms}.log. {YmdHms} adalah waktu disaat file script bash kalian dijalankan. Misal dijalankan pada 2024-03-20 15:00:00, maka file log 	yang akan tergenerate adalah metrics_20240320150000.log.
-b. Script untuk mencatat metrics diatas diharapkan dapat berjalan otomatis pada setiap menit.
-c. Kemudian, buat satu script untuk membuat agregasi file log ke satuan jam. Script agregasi akan memiliki info dari file-file yang tergenerate tiap menit. Dalam hasil file agregasi tersebut, terdapat 	nilai minimum, maximum, dan rata-rata dari tiap-tiap metrics. File agregasi akan ditrigger untuk dijalankan setiap jam secara otomatis. Berikut contoh nama file hasil agregasi metrics_agg_2024032015.log 	dengan format metrics_agg_{YmdH}.log.
-d. Karena file log bersifat sensitif pastikan semua file log hanya dapat dibaca oleh user pemilik file.
+- Masukkan semua metrics ke dalam suatu file log bernama metrics_{YmdHms}.log. {YmdHms} adalah waktu disaat file script bash kalian dijalankan. Misal dijalankan pada 2024-03-20 15:00:00, maka file log 	yang akan tergenerate adalah metrics_20240320150000.log.
+- Script untuk mencatat metrics diatas diharapkan dapat berjalan otomatis pada setiap menit.
+- Kemudian, buat satu script untuk membuat agregasi file log ke satuan jam. Script agregasi akan memiliki info dari file-file yang tergenerate tiap menit. Dalam hasil file agregasi tersebut, terdapat 	nilai minimum, maximum, dan rata-rata dari tiap-tiap metrics. File agregasi akan ditrigger untuk dijalankan setiap jam secara otomatis. Berikut contoh nama file hasil agregasi metrics_agg_2024032015.log 	dengan format metrics_agg_{YmdH}.log.
+- Karena file log bersifat sensitif pastikan semua file log hanya dapat dibaca oleh user pemilik file.
 
 Note:
 - Nama file untuk script per menit adalah minute_log.sh
@@ -980,3 +980,59 @@ maximum,15949,10387,308,622,5573,4974,2047,52,2004,/home/user/coba/,74M
 average,15949,10227,265.5,605,5456,4800,2047,47.5,1999.5,/home/user/coba/,62M
 
 ## Solusi
+### minute_log.sh
+Shell command-line berikut ditulis dengan obyektif untuk memantau sekaligus mencatat memori dan ukuran direktori */home* pengguna setiap menitnya ke dalam */home/$USER/log*.
+```
+#!/bin/bash
+
+# Konfigurasi crontab
+# * * * * * /home/$USER/minute_log.sh
+```
+- 5 bintang tersebut merepresentasikan *minute, hour, day of month, month,* dan *day of week*. Jika kelimanya *null*/simbol bintang maka dapat diartikan *every minute, every hour, every day of the month, every month, every day of the week*, yang bermakna setiap saat (setiap menit).
+
+- Diikuti dengan *script path* yang akan dijalankan cron dalam direktori */home* pengguna. 
+
+```
+current_time=$(date +"%Y%m%d%H%M%S")
+```
+- Mendapatkan waktu terkini dengan format YYYY/MM/DD-HH:MM:SS
+
+```
+log_dir="/home/$USER/log"
+mkdir -p "$log_dir"
+```
+- Menetapkan direktori */log*
+- Jika belum ada, maka console akan membuat direktori tersebut di */home/$USER/log*
+
+```
+mem_metrics=$(free -m | awk 'NR==2{printf "%s,%s,%s,%s,%s,%s,%s,%s,%s", $2,$3,$4,$5,$6,$7,$3,$6,$4+$9}')
+```
+- Mengekstrak metrik memori dalam MB menggunakan `free -m` lalu menyimpannya dalam variabel `mem_metrics`
+- `awk` berfungsi untuk memanipulasi serta menghasilkan laporan. Diikuti dengan `NR==2` yang bermakna menyambung operasi pada baris kedua setelah `free -m`.
+- `printf "%s..."` bertugas untuk mencetak nilai tertentu pada baris kedua tersebut. Yang diikuti dengan variabel `$2...` yang merepresentasikan kolom kedua, ketiga, dan seterusnya dari baris tersebut.
+
+```
+path="/home/$USER/"
+path_size=$(du -sh "$path" | awk '{print $1}')
+```
+- Menetapkan *path* ke direktori */home* pengguna sekaligus mendapatkan ukuran direktorinya untuk disimpan ke dalam `path_size`.
+
+```
+log_line="mem_total,mem_used,mem_free,mem_shared,mem_buff,mem_available,swap_total,swap_used,swap_free,path,path_size $mem_metrics,$>
+```
+- Membuat baris log dengan kumpulan metrik memori serta ukuran *path*.
+
+```
+log_file="$log_dir/metrics_$current_time.log"
+echo "$log_line" > "$log_file"
+```
+- Merekonstruksi nama file log sesuai format yang sudah disepakati dengan *"metrics_"* yang diikuti dengan waktu.
+- Mencetak isi variabel *log_line* dan mengarahkannya ke dalam *log_file*
+
+```
+chmod 600 "$log_file"
+```
+- Mengatur *permission* untuk *file_log*.
+- 600 bermakna 6 (pemilik file berhak untuk membaca dan menulis file), 0 (grup tidak memiliki hak apapun), dan 0 (pengguna lain juga tidak memiliki hak apapun).
+
+### aggregate_minutes_to_hourly_log.sh
