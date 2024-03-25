@@ -15,7 +15,7 @@ count=0
 header="type,mem_total,mem_used,mem_free,mem_shared,mem_buff,mem_available,swap_total,swap_used,swap_free,path,path_size"
 echo "$header" > "$log_file_agg"
 
-for log_file in "$log_dir"/$(date +%Y%m%d%H).log; do
+for log_file in "$log_dir"; do
     count=$((count + 1))
 
     values=($(<"$log_file"))
@@ -37,6 +37,7 @@ done
 for i in "${!sum_vals[@]}"; do
     sum_vals[$i]=`awk -v a="${sum_vals[$i]}" -v b="$count" 'BEGIN{print (a/b)}'`
 done
+
 echo "minimum,${min_vals[*]}" >> "$log_file_agg"
 echo "maximum,${max_vals[*]}" >> "$log_file_agg"
 echo "average,${sum_vals[*]}" >> "$log_file_agg"
