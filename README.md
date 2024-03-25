@@ -46,23 +46,42 @@ awk -F ',' '{gsub(/[^0-9.]/, "", $17); print $6 "," $17}
 Perintah awk -F ',' '{gsub(/[^0-9.]/, "", $17); print $6 "," $17} digunakan untuk memproses dan mencetak data dari file menggunakan awk, yang mana dilakukan dengan beberapa langkah. Pertama, dengan opsi -F ',', kita menentukan bahwa pemisah antar kolom adalah tanda koma (,). Kemudian, dalam setiap baris, kita menggunakan fungsi gsub(/[^0-9.]/, "", $17) untuk mengganti karakter-karakter yang bukan angka atau titik (.) pada kolom ke-17 dengan string kosong, sehingga hanya angka atau titik yang tersisa. Setelah itu, kita mencetak kolom ke-6 dan kolom ke-17 yang telah dimodifikasi tersebut, dipisahkan oleh koma.
 
 ```
-# 2. Tampilkan customer segment yang memiliki profit paling kecil
+| sort -t ',' -k2,2gr
+```
+Selanjutnya, keluaran dari perintah awk tersebut dialirkan ke perintah sort. Di sini, kita menggunakan opsi sort -t untuk menentukan bahwa koma (,) adalah pemisah antara kolom, dan opsi -k untuk mengurutkan berdasarkan kolom kedua (nilai penjualan) dari yang tertinggi ke terendah (secara menurun). Ini berarti hasilnya akan diurutkan berdasarkan nilai penjualan, dengan yang tertinggi terlebih dahulu.
+```
+| head -n 1)
+```
 
+Pada langkah ini, hasil keluaran dari perintah sebelumnya yang telah diurutkan (dengan menggunakan perintah sort) akan ditangkap. Perintah head -n 1 digunakan untuk mengambil satu baris pertama dari keluaran tersebut. Jadi, kita hanya akan mendapatkan satu baris pertama dari hasil pengurutan sebelumnya, yang dalam konteks ini merupakan data penjualan tertinggi.
+
+```
 profit_name=$(awk -F ',' '{print $7, $20}' $database | sort -t ' ' -k2,2n | head -n 1)
 echo "Customer segment yang memiliki profit paling kecil: $profit_name"
+```
+Pertama, kita menggunakan perintah awk untuk memproses file database. Dalam perintah ini, kita menggunakan opsi -F ',' untuk mengatur bahwa koma (,) adalah pemisah antar kolom dalam setiap baris. Kemudian, kita menggunakan perintah print untuk mencetak kolom ke-7 dan kolom ke-20 dari setiap baris. Kolom ke-7 mungkin berisi informasi terkait dengan jumlah penjualan atau pendapatan, sedangkan kolom ke-20 mungkin berisi informasi terkait dengan profit yang dihasilkan.
 
-# 3. Tampilkan 3 category yang memiliki total profit paling tinggi 
+Selanjutnya, hasil dari perintah awk akan dialirkan ke perintah sort. Di sini, kita menggunakan opsi -t ' ' untuk menetapkan bahwa spasi (' ') adalah pemisah antara kolom. Lalu, opsi -k2,2n digunakan untuk mengurutkan data berdasarkan kolom kedua (kolom profit) secara numerik (n untuk numerik) dari yang terkecil ke terbesar.
 
+Terakhir, hasil pengurutan tersebut akan disalurkan ke perintah head -n 1 untuk mengambil satu baris pertama dari hasil tersebut. Dengan demikian, variabel profit_name akan menyimpan informasi terkait dengan profit tertinggi yang ditemukan dalam database.
+
+```
 category_profit=$(awk -F ',' 'NR > 1 {profit[$14] += $20} END {for (i in profit) print i, profit[i]}' $database | sort -t ' ' -k2,2nr | head -n 3)
 echo "3 Category yang memiliki total profit paling tinggi: $category_profit"
+```
+Pertama, kita menggunakan perintah awk untuk memproses file database. Dalam perintah ini, kita menggunakan opsi -F ',' untuk mengatur bahwa koma (,) adalah pemisah antar kolom dalam setiap baris. Ekspresi NR > 1 digunakan untuk memastikan bahwa kita mulai membaca data dari baris kedua (lewat baris header). Selanjutnya, kita menggunakan array profit[$14] += $20 untuk mengumpulkan total profit untuk setiap kategori. Di sini, $14 mungkin mengandung informasi terkait dengan kategori produk atau layanan, dan $20 mungkin mengandung informasi terkait dengan profit yang dihasilkan.
 
-# 4. Cari purchase date dan amount (quantity) dari nama adriaens
+Setelah semua data diproses, kita menggunakan blok END untuk mengeksekusi perintah di dalamnya setelah selesai membaca semua baris dari file. Di dalam blok END, kita menggunakan loop for untuk mencetak kategori dan total profit untuk setiap kategori.
 
+Selanjutnya, hasil dari perintah awk akan dialirkan ke perintah sort. Di sini, kita menggunakan opsi -t ' ' untuk menetapkan bahwa spasi (' ') adalah pemisah antara kolom. Lalu, opsi -k2,2nr digunakan untuk mengurutkan data berdasarkan kolom kedua (total profit) secara numerik (n untuk numerik) dari yang tertinggi ke terendah (r untuk reverse).
+
+Terakhir, hasil pengurutan tersebut akan disalurkan ke perintah head -n 3 untuk mengambil tiga baris pertama dari hasil tersebut. Dengan demikian, variabel category_profit akan menyimpan informasi terkait dengan tiga kategori dengan profit tertinggi yang ditemukan dalam database.
+```
 adriaens=$(awk -F ',' '$6 ~ /Adriaens/ {print $2, $18}' $database)
 echo "Purchase date dan amount (quantity) dari nama Adriaens: $adriaens"
 
 ```
-
+Perintah di atas menggunakan perintah awk untuk memproses file database dan mencari entri yang terkait dengan penjual yang memiliki nama "Adriaens" pada kolom ke-6. Pertama-tama, kita menggunakan opsi -F ',' untuk menetapkan bahwa koma (,) adalah pemisah antar kolom dalam setiap baris. Kemudian, dengan menggunakan $6 ~ /Adriaens/, kita menyaring baris-baris di mana kolom ke-6 (mungkin berisi nama penjual) sesuai dengan pola "Adriaens". Setelah menyaring baris-baris yang sesuai, kita menggunakan print $2, $18 untuk mencetak kolom ke-2 (mungkin berisi informasi terkait dengan produk atau layanan) dan kolom ke-18 (mungkin berisi informasi terkait dengan jumlah penjualan atau profit).
 
 ## NOMOR 2
 
