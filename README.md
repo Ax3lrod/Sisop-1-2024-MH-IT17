@@ -801,74 +801,153 @@ rm -f genshin.zip genshin_character.zip list_character.csv
 ```
 Ini menghapus file "genshin.zip", "genshin_character.zip", dan "list_character.csv" setelah selesai melakukan operasi yang diperlukan.
 
+KODE FULL:
+```
+#!/bin/bash
+
+wget -O genshin.zip 'https://docs.google.com/uc?export=download&id=1oGHdTf4_76_RacfmQIV4i7os4sGwa9vN'
+# Unzip file karakter
+unzip genshin.zip
+unzip -o genshin_character.zip 
+
+declare -A weapon_count
+
+for file in /home/ziqi/pts1/genshin_character/*.jpg; do
+    decoded_name=$(basename "$file" | xxd -r -p)
+    region=$(awk -F',' -v name="$decoded_name" '$1 == name {print $2}' /home/ziqi/pts1/list_character.csv)
+    elemen=$(awk -F',' -v name="$decoded_name" '$1 == name {print $3}' /home/ziqi/pts1/list_character.csv)
+    weapon=$(awk -F',' -v name="$decoded_name" '$1 == name {print $4}' /home/ziqi/pts1/list_character.csv)
+    mkdir -p "/home/ziqi/pts1/genshin_character/$region"
+    if [ -f "$file" ]; then
+        mv "$file" "/home/ziqi/pts1/genshin_character/$region/$region-$decoded_name-$elemen-$weapon.jpg"
+    else
+        echo "File not found: $file"
+    fi
+    if [ -f "/home/ziqi/pts1/genshin_character/$region/$region-$decoded_name-$elemen-$weapon.jpg" ]; then
+        cp "/home/ziqi/pts1/genshin_character/$region/$region-$decoded_name-$elemen-$weapon.jpg" "/home/ziqi/pts1/genshin_character/$region/"
+    else
+        echo "File not found: /home/ziqi/pts1/$region/$region-$decoded_name-$elemen-$weapon.jpg"
+    fi
+done
+
+weapon_types=(Catalyst Bow Polearm Sword Claymore)
+
+for weapon_type in "${weapon_types[@]}"; do
+  count=$(awk -F',' '/'"$weapon_type"'/ { ++count } END { print count }' list_character.csv)
+  echo "$weapon_type : $count"
+done
+
+# Hapus file yang tidak diperlukan
+rm -f genshin.zip  genshin_character.zip list_character.csv
+```
+
 
 Kode ini pada dasarnya digunakan untuk mengelola dan mengatur ulang file-file dalam folder "genshin_character" berdasarkan informasi yang diperoleh dari file "list_character.csv", serta menghitung jumlah senjata yang ada dalam permainan Genshin Impact berdasarkan jenisnya.
 
 ## search.sh
 
 Kode ini adalah sebuah skrip Bash yang melakukan beberapa tugas. Berikut adalah penjelasan langkah demi langkah:
-``
+
+```
 #!/bin/bash
-``
+```
 Ini adalah shebang line yang menunjukkan bahwa skrip ini akan dijalankan menggunakan Bash shell.
-``
+```
 touch /home/ziqi/pts1/image.log
-``
+```
 Membuat file kosong bernama "image.log" di direktori "/home/ziqi/pts1/".
 
-``
+```
 process() { ... }
-``
+```
 Ini adalah fungsi bash yang didefinisikan di dalam skrip. Fungsi ini bertujuan untuk melakukan pemrosesan pada file teks yang ada.
 
 Di dalam fungsi `process`, dilakukan:
-``
+```
 mkdir -p /home/ziqi/pts1/textfile
-``
+```
 Membuat direktori "textfile" di "/home/ziqi/pts1/", jika belum ada.
-``
+```
 mv /home/ziqi/pts1/*.txt /home/ziqi/pts1/textfile/
-``
+```
 Memindahkan semua file dengan ekstensi ".txt" dari direktori utama ke direktori "textfile".
-     - Loop
-       ``
+   - Loop
+```
        for file in /home/ziqi/pts1/textfile/*.txt; do ... done
-       ``
-     - Setiap file di-decode dari base64 menggunakan
-       ``
+```
+   - Setiap file di-decode dari base64 menggunakan
+```
        base64 -d "$file" > secret.txt
-       ``
-     - Dilakukan pencarian URL dalam teks menggunakan ekspresi reguler.
-     - Jika URL ditemukan, file dipindahkan ke "/home/ziqi/pts1/", dan log dibuat dengan status "FOUND".
-     - Jika tidak, status "NOT FOUND" ditulis dalam log.
-     - File teks asli dihapus setelah diproses.
-``
+```
+   - Dilakukan pencarian URL dalam teks menggunakan ekspresi reguler.
+   - Jika URL ditemukan, file dipindahkan ke "/home/ziqi/pts1/", dan log dibuat dengan status "FOUND".
+   - Jika tidak, status "NOT FOUND" ditulis dalam log.
+   - File teks asli dihapus setelah diproses.
+```
 sleep 1
-``
+```
 Memberikan jeda 1 detik.
 
 Loop utama 
-``
+```
 for region in Mondstat Liyue Fontaine Inazuma Sumeru; do ... done
-``
+```
    - Setiap iterasi, variabel `region` diisi dengan salah satu nilai dalam daftar (Mondstat, Liyue, Fontaine, Inazuma, Sumeru).
    - Kemudian, sebuah loop
-     ``
+     ```
      for image in "/home/ziqi/pts1/genshin_character/$region"/*.jpg; do ... done
-     ``
+     ```
      dilakukan untuk setiap gambar JPG dalam direktori yang sesuai dengan variabel `region`.
    - Setiap gambar di-extract menggunakan steghide dengan menggunakan kata sandi `pass` yang saat ini kosong.
    - Setelah ekstraksi, fungsi `process` dipanggil untuk melakukan pemrosesan pada file tersebut.
 
-``
+```
 secret_link=$(cat "secret.txt")
-``
+```
 Isi dari file "secret.txt" (yang mungkin sudah berubah setelah pemrosesan di dalam fungsi `process`) disimpan dalam variabel `secret_link`.
 
-``
+```
 wget -O gambar.jpg "$secret_link"
-``
+```
 Dilakukan unduhan menggunakan `wget` dengan URL yang didapatkan dari file "secret.txt", dan disimpan dengan nama "gambar.jpg".
+
+KODE FULL:
+```
+#!/bin/bash
+
+touch /home/ziqi/pts1/image.log
+
+process() { 
+    mkdir -p /home/ziqi/pts1/textfile
+    mv /home/ziqi/pts1/*.txt /home/ziqi/pts1/textfile/
+
+    for file in /home/ziqi/pts1/textfile/*.txt; do
+        base64 -d "$file" > secret.txt
+        regex='(https?|ftp|file)://[-[:alnum:]\+&@#/%?=~_|!:,.;]*[-[:alnum:]\+&@#/%=~_|]'
+        string=$(cat secret.txt)
+        if [[ $string =~ $regex ]]; then
+           mv secret.txt /home/ziqi/pts1
+        echo "[$(date '+%Y/%M/%d %H:%M:%S')] [FOUND] [/home/ziqi/pts1/genshin_character/$file]" >> image.log
+        break
+    else
+        echo "[$(date '+%Y/%M/%d %H:%M:%S')] [NOT FOUND] [/home/ziqi/pts1/genshin_character/$file]" >> image.log
+    fi
+    rm "$file"
+done
+    sleep 1
+}
+
+for region in Mondstat Liyue Fontaine Inazuma Sumeru; do
+    pass=""
+    for image in "/home/ziqi/pts1/genshin_character/$region"/*.jpg; do
+        steghide extract -q -sf "$image" -p "$pass"
+        process "$image"
+    done
+done
+
+secret_link=$(cat "secret.txt")
+wget -O gambar.jpg "$secret_link"
+```
 
 Dengan demikian, skrip ini bertujuan untuk mengekstrak pesan tersembunyi dari gambar JPEG dalam berbagai folder yang terkait dengan wilayah-wilayah dalam permainan Genshin Impact, kemudian mengunduh file dari URL yang ditemukan dalam teks tersembunyi tersebut.
 
