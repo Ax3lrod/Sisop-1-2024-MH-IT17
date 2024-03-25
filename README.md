@@ -731,10 +731,106 @@ Jika user menginput angka untuk command selain 1 dan 2 maka program akan berhent
 
 Program selesai.
 
+## NOMOR 3
 
+  Alyss adalah seorang gamer yang sangat menyukai bermain game Genshin Impact. Karena hobinya, dia ingin mengoleksi foto-foto karakter Genshin Impact. Suatu saat Yanuar memberikannya sebuah Link yang berisi koleksi kumpulan foto karakter dan sebuah clue yang mengarah ke penemuan gambar rahasia. Ternyata setiap nama file telah dienkripsi dengan menggunakan hexadecimal. Karena penasaran dengan apa yang dikatakan Yanuar, Alyss tidak menyerah dan mencoba untuk mengembalikan nama file tersebut kembali seperti semula.
+Alyss membuat script bernama awal.sh, untuk download file yang diberikan oleh Yanuar dan unzip terhadap file yang telah diunduh dan decode setiap nama file yang terenkripsi dengan hex . Karena pada file list_character.csv terdapat data lengkap karakter, Alyss ingin merename setiap file berdasarkan file tersebut. Agar semakin rapi, Alyss mengumpulkan setiap file ke dalam folder berdasarkan region tiap karakter
+    
+    Format: Region - Nama - Elemen - Senjata.jpg
+Karena tidak mengetahui jumlah pengguna dari tiap senjata yang ada di folder "genshin_character".Alyss berniat untuk menghitung serta menampilkan jumlah pengguna untuk setiap senjata yang ada
+    
+    Format: [Nama Senjata] : [jumlah]
+	  Untuk menghemat penyimpanan. Alyss menghapus file - file yang tidak ia gunakan, yaitu genshin_character.zip, list_character.csv, dan genshin.zip
 
+Namun sampai titik ini Alyss masih belum menemukan clue dari the secret picture yang disinggung oleh Yanuar. Dia berpikir keras untuk menemukan pesan tersembunyi tersebut. Alyss membuat script baru bernama search.sh untuk melakukan pengecekan terhadap setiap file tiap 1 detik. Pengecekan dilakukan dengan cara meng-ekstrak sebuah value dari setiap gambar dengan menggunakan command steghide. Dalam setiap gambar tersebut, terdapat sebuah file txt yang berisi string. Alyss kemudian mulai melakukan dekripsi dengan hex pada tiap file txt dan mendapatkan sebuah url. Setelah mendapatkan url yang ia cari, Alyss akan langsung menghentikan program search.sh serta mendownload file berdasarkan url yang didapatkan.
+Dalam prosesnya, setiap kali Alyss melakukan ekstraksi dan ternyata hasil ekstraksi bukan yang ia inginkan, maka ia akan langsung menghapus file txt tersebut. Namun, jika itu merupakan file txt yang dicari, maka ia akan menyimpan hasil dekripsi-nya bukan hasil ekstraksi. Selain itu juga, Alyss melakukan pencatatan log pada file image.log untuk setiap pengecekan gambar
+    
+    Format: [date] [type] [image_path]
+    Ex: 
+    [24/03/20 17:18:19] [NOT FOUND] [image_path]
+    [24/03/20 17:18:20] [FOUND] [image_path]
+    Hasil akhir:
+    genshin_character
+    search.sh
+    awal.sh
+    image.log
+    [filename].txt
+    [image].jpg
 
+##  Solusi
 
+## awal.sh
+#!/bin/bash: Ini adalah shebang line yang menunjukkan bahwa skrip ini akan dijalankan menggunakan Bash shell.
+```
+wget -O genshin.zip 'https://docs.google.com/uc?export=download&id=1oGHdTf4_76_RacfmQIV4i7os4sGwa9vN'
+```
+Baris ini menggunakan perintah wget untuk mengunduh file dari URL yang diberikan dan menyimpannya dengan nama "genshin.zip".
+```
+unzip genshin.zip
+```
+Ini adalah perintah untuk mengekstrak isi dari file "genshin.zip" yang baru saja diunduh.
+```
+unzip -o genshin_character.zip
+```
+Ini mengekstrak isi dari file "genshin_character.zip" yang ada di dalam file "genshin.zip".
+```
+declare -A weapon_count
+```
+Ini mendeklarasikan sebuah array asosiatif yang akan digunakan untuk menghitung jumlah senjata yang ada.
+```
+for file in /home/ziqi/pts1/genshin_character/*.jpg; do ... done
+```
+Ini adalah loop yang berjalan melalui setiap file dengan ekstensi ".jpg" di dalam folder "/home/ziqi/pts1/genshin_character/".
 
+Di dalam loop, dilakukan ekstraksi nama file, region, elemen, dan senjata dari setiap file menggunakan perintah awk yang mendapatkan data dari file "list_character.csv". Kemudian file dipindahkan ke folder yang sesuai berdasarkan region dan direname sesuai dengan informasi yang diperoleh.
+```
+weapon_types=(Catalyst Bow Polearm Sword Claymore)
+```
+Ini mendefinisikan sebuah array dengan jenis senjata yang akan dihitung.
+```
+for weapon_type in "${weapon_types[@]}"; do ... done
+```
+Ini adalah loop yang berjalan melalui setiap jenis senjata yang telah didefinisikan sebelumnya.
+
+Di dalam loop, dilakukan pencarian jumlah setiap jenis senjata menggunakan perintah awk yang mencocokkan jenis senjata dengan data yang ada di file "list_character.csv".
+```
+rm -f genshin.zip genshin_character.zip list_character.csv
+```
+Ini menghapus file "genshin.zip", "genshin_character.zip", dan "list_character.csv" setelah selesai melakukan operasi yang diperlukan.
+
+Kode ini pada dasarnya digunakan untuk mengelola dan mengatur ulang file-file dalam folder "genshin_character" berdasarkan informasi yang diperoleh dari file "list_character.csv", serta menghitung jumlah senjata yang ada dalam permainan Genshin Impact berdasarkan jenisnya.
+
+## search.sh
+
+Kode ini adalah sebuah skrip Bash yang melakukan beberapa tugas. Berikut adalah penjelasan langkah demi langkah:
+
+1. `#!/bin/bash`: Ini adalah shebang line yang menunjukkan bahwa skrip ini akan dijalankan menggunakan Bash shell.
+
+2. `touch /home/ziqi/pts1/image.log`: Membuat file kosong bernama "image.log" di direktori "/home/ziqi/pts1/".
+
+3. `process() { ... }`: Ini adalah fungsi bash yang didefinisikan di dalam skrip. Fungsi ini bertujuan untuk melakukan pemrosesan pada file teks yang ada.
+
+4. Di dalam fungsi `process`, dilakukan:
+   - `mkdir -p /home/ziqi/pts1/textfile`: Membuat direktori "textfile" di "/home/ziqi/pts1/", jika belum ada.
+   - `mv /home/ziqi/pts1/*.txt /home/ziqi/pts1/textfile/`: Memindahkan semua file dengan ekstensi ".txt" dari direktori utama ke direktori "textfile".
+   - Loop `for file in /home/ziqi/pts1/textfile/*.txt; do ... done`:
+     - Setiap file di-decode dari base64 menggunakan `base64 -d "$file" > secret.txt`.
+     - Dilakukan pencarian URL dalam teks menggunakan ekspresi reguler.
+     - Jika URL ditemukan, file dipindahkan ke "/home/ziqi/pts1/", dan log dibuat dengan status "FOUND".
+     - Jika tidak, status "NOT FOUND" ditulis dalam log.
+     - File teks asli dihapus setelah diproses.
+   - `sleep 1`: Memberikan jeda 1 detik.
+
+5. Loop utama `for region in Mondstat Liyue Fontaine Inazuma Sumeru; do ... done`:
+   - Setiap iterasi, variabel `region` diisi dengan salah satu nilai dalam daftar (Mondstat, Liyue, Fontaine, Inazuma, Sumeru).
+   - Kemudian, sebuah loop `for image in "/home/ziqi/pts1/genshin_character/$region"/*.jpg; do ... done` dilakukan untuk setiap gambar JPG dalam direktori yang sesuai dengan variabel `region`.
+   - Setiap gambar di-extract menggunakan steghide dengan menggunakan kata sandi `pass` yang saat ini kosong.
+   - Setelah ekstraksi, fungsi `process` dipanggil untuk melakukan pemrosesan pada file tersebut.
+
+6. `secret_link=$(cat "secret.txt")`: Isi dari file "secret.txt" (yang mungkin sudah berubah setelah pemrosesan di dalam fungsi `process`) disimpan dalam variabel `secret_link`.
+
+7. `wget -O gambar.jpg "$secret_link"`: Dilakukan unduhan menggunakan `wget` dengan URL yang didapatkan dari file "secret.txt", dan disimpan dengan nama "gambar.jpg".
+
+Dengan demikian, skrip ini bertujuan untuk mengekstrak pesan tersembunyi dari gambar JPEG dalam berbagai folder yang terkait dengan wilayah-wilayah dalam permainan Genshin Impact, kemudian mengunduh file dari URL yang ditemukan dalam teks tersembunyi tersebut.
 
 
