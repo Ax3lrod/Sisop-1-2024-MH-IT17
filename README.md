@@ -3,8 +3,8 @@
 ## Anggota Kelompok
 
 1. Aryasatya Alaauddin 5027231082
-2. 
-
+2. Diandra Naufal Abror 5027231004
+3. Muhamad Rizq Taufan 5027231021
 
 ## NOMOR 1
 
@@ -21,7 +21,48 @@ d. Karena ada seseorang yang lapor kepada Cipung dan Abe bahwa pesanannya tidak 
 
 ## Solusi
 
-##
+Untuk menyelesaikan soal ini saya akan membuat sebuah shell script bash yang akan membaca file database Sandbox.csv dan menampilkan data-data yang diinginkan Cipung dan
+Abe.
+
+## A. Tampilkan nama pembeli dengan total sales paling tinggi
+
+```
+
+database="Sandbox.csv"
+
+```
+Pertama program akan membaca isi database sandbox.csv dan menyimpannya ke dalam variabel database.
+
+```
+sales_name=$(awk -F ',' '{gsub(/[^0-9.]/, "", $17); print $6 "," $17}' $database | sort -t ',' -k2,2gr | head -n 1)
+echo "Nama pembeli dengan total sales paling tinggi: $sales_name"
+```
+Untuk mencari pembeli dengan total sales paling tinggi, pertama program akan mencari kolom nama pembeli (kolom ke 6) dan kolom sales (kolom ke 17).
+
+```
+awk -F ',' '{gsub(/[^0-9.]/, "", $17); print $6 "," $17}
+```
+
+Perintah awk -F ',' '{gsub(/[^0-9.]/, "", $17); print $6 "," $17} digunakan untuk memproses dan mencetak data dari file menggunakan awk, yang mana dilakukan dengan beberapa langkah. Pertama, dengan opsi -F ',', kita menentukan bahwa pemisah antar kolom adalah tanda koma (,). Kemudian, dalam setiap baris, kita menggunakan fungsi gsub(/[^0-9.]/, "", $17) untuk mengganti karakter-karakter yang bukan angka atau titik (.) pada kolom ke-17 dengan string kosong, sehingga hanya angka atau titik yang tersisa. Setelah itu, kita mencetak kolom ke-6 dan kolom ke-17 yang telah dimodifikasi tersebut, dipisahkan oleh koma.
+
+```
+# 2. Tampilkan customer segment yang memiliki profit paling kecil
+
+profit_name=$(awk -F ',' '{print $7, $20}' $database | sort -t ' ' -k2,2n | head -n 1)
+echo "Customer segment yang memiliki profit paling kecil: $profit_name"
+
+# 3. Tampilkan 3 category yang memiliki total profit paling tinggi 
+
+category_profit=$(awk -F ',' 'NR > 1 {profit[$14] += $20} END {for (i in profit) print i, profit[i]}' $database | sort -t ' ' -k2,2nr | head -n 3)
+echo "3 Category yang memiliki total profit paling tinggi: $category_profit"
+
+# 4. Cari purchase date dan amount (quantity) dari nama adriaens
+
+adriaens=$(awk -F ',' '$6 ~ /Adriaens/ {print $2, $18}' $database)
+echo "Purchase date dan amount (quantity) dari nama Adriaens: $adriaens"
+
+```
+
 
 ## NOMOR 2
 
