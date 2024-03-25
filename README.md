@@ -760,7 +760,10 @@ Dalam prosesnya, setiap kali Alyss melakukan ekstraksi dan ternyata hasil ekstra
 ##  Solusi
 
 ## awal.sh
-#!/bin/bash: Ini adalah shebang line yang menunjukkan bahwa skrip ini akan dijalankan menggunakan Bash shell.
+``
+#!/bin/bash
+``
+Ini adalah shebang line yang menunjukkan bahwa skrip ini akan dijalankan menggunakan Bash shell.
 ```
 wget -O genshin.zip 'https://docs.google.com/uc?export=download&id=1oGHdTf4_76_RacfmQIV4i7os4sGwa9vN'
 ```
@@ -798,38 +801,74 @@ rm -f genshin.zip genshin_character.zip list_character.csv
 ```
 Ini menghapus file "genshin.zip", "genshin_character.zip", dan "list_character.csv" setelah selesai melakukan operasi yang diperlukan.
 
+
 Kode ini pada dasarnya digunakan untuk mengelola dan mengatur ulang file-file dalam folder "genshin_character" berdasarkan informasi yang diperoleh dari file "list_character.csv", serta menghitung jumlah senjata yang ada dalam permainan Genshin Impact berdasarkan jenisnya.
 
 ## search.sh
 
 Kode ini adalah sebuah skrip Bash yang melakukan beberapa tugas. Berikut adalah penjelasan langkah demi langkah:
+``
+#!/bin/bash
+``
+Ini adalah shebang line yang menunjukkan bahwa skrip ini akan dijalankan menggunakan Bash shell.
+``
+touch /home/ziqi/pts1/image.log
+``
+Membuat file kosong bernama "image.log" di direktori "/home/ziqi/pts1/".
 
-1. `#!/bin/bash`: Ini adalah shebang line yang menunjukkan bahwa skrip ini akan dijalankan menggunakan Bash shell.
+``
+process() { ... }
+``
+Ini adalah fungsi bash yang didefinisikan di dalam skrip. Fungsi ini bertujuan untuk melakukan pemrosesan pada file teks yang ada.
 
-2. `touch /home/ziqi/pts1/image.log`: Membuat file kosong bernama "image.log" di direktori "/home/ziqi/pts1/".
-
-3. `process() { ... }`: Ini adalah fungsi bash yang didefinisikan di dalam skrip. Fungsi ini bertujuan untuk melakukan pemrosesan pada file teks yang ada.
-
-4. Di dalam fungsi `process`, dilakukan:
-   - `mkdir -p /home/ziqi/pts1/textfile`: Membuat direktori "textfile" di "/home/ziqi/pts1/", jika belum ada.
-   - `mv /home/ziqi/pts1/*.txt /home/ziqi/pts1/textfile/`: Memindahkan semua file dengan ekstensi ".txt" dari direktori utama ke direktori "textfile".
-   - Loop `for file in /home/ziqi/pts1/textfile/*.txt; do ... done`:
-     - Setiap file di-decode dari base64 menggunakan `base64 -d "$file" > secret.txt`.
+Di dalam fungsi `process`, dilakukan:
+``
+mkdir -p /home/ziqi/pts1/textfile
+``
+Membuat direktori "textfile" di "/home/ziqi/pts1/", jika belum ada.
+``
+mv /home/ziqi/pts1/*.txt /home/ziqi/pts1/textfile/
+``
+Memindahkan semua file dengan ekstensi ".txt" dari direktori utama ke direktori "textfile".
+     - Loop
+       ``
+       for file in /home/ziqi/pts1/textfile/*.txt; do ... done
+       ``
+     - Setiap file di-decode dari base64 menggunakan
+       ``
+       base64 -d "$file" > secret.txt
+       ``
      - Dilakukan pencarian URL dalam teks menggunakan ekspresi reguler.
      - Jika URL ditemukan, file dipindahkan ke "/home/ziqi/pts1/", dan log dibuat dengan status "FOUND".
      - Jika tidak, status "NOT FOUND" ditulis dalam log.
      - File teks asli dihapus setelah diproses.
-   - `sleep 1`: Memberikan jeda 1 detik.
+``
+sleep 1
+``
+Memberikan jeda 1 detik.
 
-5. Loop utama `for region in Mondstat Liyue Fontaine Inazuma Sumeru; do ... done`:
+Loop utama 
+``
+for region in Mondstat Liyue Fontaine Inazuma Sumeru; do ... done
+``
    - Setiap iterasi, variabel `region` diisi dengan salah satu nilai dalam daftar (Mondstat, Liyue, Fontaine, Inazuma, Sumeru).
-   - Kemudian, sebuah loop `for image in "/home/ziqi/pts1/genshin_character/$region"/*.jpg; do ... done` dilakukan untuk setiap gambar JPG dalam direktori yang sesuai dengan variabel `region`.
+   - Kemudian, sebuah loop
+     ``
+     for image in "/home/ziqi/pts1/genshin_character/$region"/*.jpg; do ... done
+     ``
+     dilakukan untuk setiap gambar JPG dalam direktori yang sesuai dengan variabel `region`.
    - Setiap gambar di-extract menggunakan steghide dengan menggunakan kata sandi `pass` yang saat ini kosong.
    - Setelah ekstraksi, fungsi `process` dipanggil untuk melakukan pemrosesan pada file tersebut.
 
-6. `secret_link=$(cat "secret.txt")`: Isi dari file "secret.txt" (yang mungkin sudah berubah setelah pemrosesan di dalam fungsi `process`) disimpan dalam variabel `secret_link`.
+``
+secret_link=$(cat "secret.txt")
+``
+Isi dari file "secret.txt" (yang mungkin sudah berubah setelah pemrosesan di dalam fungsi `process`) disimpan dalam variabel `secret_link`.
 
-7. `wget -O gambar.jpg "$secret_link"`: Dilakukan unduhan menggunakan `wget` dengan URL yang didapatkan dari file "secret.txt", dan disimpan dengan nama "gambar.jpg".
+``
+wget -O gambar.jpg "$secret_link"
+``
+Dilakukan unduhan menggunakan `wget` dengan URL yang didapatkan dari file "secret.txt", dan disimpan dengan nama "gambar.jpg".
 
 Dengan demikian, skrip ini bertujuan untuk mengekstrak pesan tersembunyi dari gambar JPEG dalam berbagai folder yang terkait dengan wilayah-wilayah dalam permainan Genshin Impact, kemudian mengunduh file dari URL yang ditemukan dalam teks tersembunyi tersebut.
 
