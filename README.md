@@ -1,5 +1,11 @@
 # PENJELASAN SOAL SHIFT MODUL 1
 
+## Anggota Kelompok
+
+1. Aryasatya Alaauddin 5027231082
+2. 
+
+
 ## NOMOR 1
 
 Cipung dan abe ingin mendirikan sebuah toko bernama “SandBox”, sedangkan kamu adalah manajer penjualan yang ditunjuk oleh Cipung dan Abe untuk melakukan pelaporan penjualan dan strategi penjualan kedepannya yang akan dilakukan.
