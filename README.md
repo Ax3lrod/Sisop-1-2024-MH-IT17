@@ -961,6 +961,15 @@ done
 # Hapus file yang tidak diperlukan
 rm -f genshin.zip  genshin_character.zip list_character.csv
 ```
+Hasil:
+![Screenshot 2024-03-30 170648](https://github.com/Ax3lrod/Sisop-1-2024-MH-IT17/assets/151889425/cff5be12-1fc1-43ff-aff8-7952390c60a6)
+![Screenshot 2024-03-30 170705](https://github.com/Ax3lrod/Sisop-1-2024-MH-IT17/assets/151889425/4d83e41c-5260-4134-b38e-a3a1277a0cd1)
+![Screenshot 2024-03-30 170716](https://github.com/Ax3lrod/Sisop-1-2024-MH-IT17/assets/151889425/8e3b4287-63d6-412b-ba37-d951c586bdeb)
+![Screenshot 2024-03-30 170754](https://github.com/Ax3lrod/Sisop-1-2024-MH-IT17/assets/151889425/2a70e054-df54-445a-8fb7-b002acb6b301)
+![Screenshot 2024-03-30 170812](https://github.com/Ax3lrod/Sisop-1-2024-MH-IT17/assets/151889425/a5c1953c-a360-48b4-b0e8-cd5c23bc54dc)
+![Screenshot 2024-03-30 170828](https://github.com/Ax3lrod/Sisop-1-2024-MH-IT17/assets/151889425/3caa4e70-d131-4912-ad3c-2816e2a15549)
+![Screenshot 2024-03-30 170845](https://github.com/Ax3lrod/Sisop-1-2024-MH-IT17/assets/151889425/d299405d-a6e2-4cb7-aea1-11796168f45b)
+![Screenshot 2024-03-30 170535](https://github.com/Ax3lrod/Sisop-1-2024-MH-IT17/assets/151889425/3c8a3d62-e808-4c59-b2a7-2dc354e7cbc0)
 
 
 Kode ini pada dasarnya digunakan untuk mengelola dan mengatur ulang file-file dalam folder "genshin_character" berdasarkan informasi yang diperoleh dari file "list_character.csv", serta menghitung jumlah senjata yang ada dalam permainan Genshin Impact berdasarkan jenisnya.
@@ -1069,6 +1078,9 @@ done
 secret_link=$(cat "secret.txt")
 wget -O gambar.jpg "$secret_link"
 ```
+Hasil:
+![Screenshot 2024-03-30 170149](https://github.com/Ax3lrod/Sisop-1-2024-MH-IT17/assets/151889425/8821d714-393e-495a-913b-7068b5d8d497)
+![Screenshot 2024-03-30 171106](https://github.com/Ax3lrod/Sisop-1-2024-MH-IT17/assets/151889425/c3763954-7449-40e5-ad9b-d78ae666a963)
 
 Dengan demikian, skrip ini bertujuan untuk mengekstrak pesan tersembunyi dari gambar JPEG dalam berbagai folder yang terkait dengan wilayah-wilayah dalam permainan Genshin Impact, kemudian mengunduh file dari URL yang ditemukan dalam teks tersembunyi tersebut.
 
