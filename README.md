@@ -143,7 +143,7 @@ j. Oppie ingin programnya tercatat dengan baik, maka buatlah agar program bisa m
 
 Untuk menyelesaikan soal ini, saya akan membuat 2 file code bash yang bernama login.sh dan register.sh.
 
-## 1. register.sh
+## register.sh
 
 Soal meminta untuk membuat sebuah code bash bernama register.sh yang bertujuan untuk menerima input 
 data akun peneliti dan meletakkannya ke dalam file users.txt. Oleh karena itu pertama-tama program harus 
@@ -274,7 +274,7 @@ echo "User Registered Successfully!"
 
 Program berakhir.
 
-## 2. login.sh
+## login.sh
 
 Selain opsi untuk login, soal juga meminta agar program memiliki opsi untuk password recovery jika user melupakan password
 mereka. Oleh karena itu, ini adalah tampilan menu awal dari login.sh
@@ -288,7 +288,7 @@ read command
 ```
 Kemudian program akan menerima input angka yang sesuai dengan command yang diinginkan.
 
-## A. Login
+A. Login
 
 Berikut adalah jalan kerja program jika user memilih opsi 1. Login.
 
@@ -361,7 +361,7 @@ Jika user menginput password yang salah, maka program akan membuat laporan bahwa
 
 dan terakhir, jika email yang diinputkan user tidak ada di database (tidak teregistrasi) maka program akan berhenti.
 
-## A.1. Menu Admin
+A.1. Menu Admin
 
 Jika email yang diinput user memiliki kata "admin", maka user tersebut teregistrasi sebagai admin dan memiliki 
 akses khusus. 
@@ -707,7 +707,7 @@ selain angka 1 - 4 maka program juga akan berhenti sepenuhnya.
 Jika user login dengan email yang tidak mengandung kata "admin" maka user telah login
 sebagai user biasa dan tidak memiliki akses untuk menjalankan perintah-perintah admin.
 
-## B. Forgot Password
+B. Forgot Password
 
 Jika pada menu utama program login.sh user memilih command 2 (Forgot Password), program
 akan membantu user untuk mengembalikan password mereka.
@@ -968,7 +968,7 @@ done
 # Hapus file yang tidak diperlukan
 rm -f genshin.zip  genshin_character.zip list_character.csv
 ```
-Hasil:
+## Output
 
 ![Screenshot 2024-03-30 170535](https://github.com/Ax3lrod/Sisop-1-2024-MH-IT17/assets/151889425/3c8a3d62-e808-4c59-b2a7-2dc354e7cbc0)
 ![Screenshot 2024-03-30 170648](https://github.com/Ax3lrod/Sisop-1-2024-MH-IT17/assets/151889425/cff5be12-1fc1-43ff-aff8-7952390c60a6)
@@ -1086,7 +1086,7 @@ done
 secret_link=$(cat "secret.txt")
 wget -O gambar.jpg "$secret_link"
 ```
-Hasil:
+## Output
 
 
 ![Screenshot 2024-03-30 171106](https://github.com/Ax3lrod/Sisop-1-2024-MH-IT17/assets/151889425/c3763954-7449-40e5-ad9b-d78ae666a963)
