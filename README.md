@@ -1156,6 +1156,10 @@ chmod 600 "$log_file"
 - Mengatur *permission* untuk *file_log*.
 - 600 bermakna 6 (pemilik file berhak untuk membaca dan menulis file), 0 (grup tidak memiliki hak apapun), dan 0 (pengguna lain juga tidak memiliki hak apapun).
 
+## Output
+
+![Ubuntu 64-bit - VMware Workstation 30_03_2024 17_07_43](https://github.com/Ax3lrod/Sisop-1-2024-MH-IT17/assets/151877527/3d788096-fd11-40ff-9cae-06c137ab58dc)
+
 ## Revisi
 
 1. Soal 2: Revisi error logika di login.sh bagian edit_user, untuk memeriksa apakah email ada di database atau tidak.
