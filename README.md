@@ -73,7 +73,7 @@ Terakhir, output pengurutan tersebut akan disalurkan ke command head -n 1 untuk 
 category_profit=$(awk -F ',' 'NR > 1 {profit[$14] += $20} END {for (i in profit) print i, profit[i]}' $database | sort -t ' ' -k2,2nr | head -n 3)
 echo "3 Category yang memiliki total profit paling tinggi: $category_profit"
 ```
-Pertama, program menggunakan command awk untuk memproses file database. Dalam command ini, program menggunakan atribut -F ',' untuk mengatur bahwa koma (,) adalah pemisah antar kolom dalam setiap baris. Ekspresi NR > 1 digunakan untuk memastikan bahwa program mulai membaca data dari baris kedua (lewat baris header). Selanjutnya, program menggunakan array profit[$14] += $20 untuk mengumpulkan total profit untuk setiap kategori. Kolom ke 14 (14$) memiliki data kategori sementara kolom ke 20 ($20) memiliki data profit.
+Pertama, program menggunakan command awk untuk memproses file database. Dalam command ini, program menggunakan atribut -F ',' untuk mengatur bahwa koma (,) adalah pemisah antar kolom dalam setiap baris. Ekspresi NR > 1 digunakan untuk memastikan bahwa program mulai membaca data dari baris kedua (lewat baris header). Selanjutnya, program menggunakan array profit[$14] += $20 untuk mengumpulkan total profit untuk setiap kategori. Kolom ke 14 ($14) memiliki data kategori sementara kolom ke 20 ($20) memiliki data profit.
 
 Setelah semua data diproses, program menggunakan blok END untuk menjalankan command di dalamnya setelah selesai membaca semua baris dari file. Di dalam blok END, program menggunakan loop for untuk mencetak kategori dan total profit untuk setiap kategori.
 
