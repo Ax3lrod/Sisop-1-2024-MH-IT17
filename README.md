@@ -2,9 +2,9 @@
 
 ## Anggota Kelompok
 
-1. Aryasatya Alaauddin 5027231082
-2. Diandra Naufal Abror 5027231004
-3. Muhamad Rizq Taufan 5027231021
+1. Aryasatya Alaauddin 5027231082 (Mengerjakan soal 1 dan 2)
+2. Diandra Naufal Abror 5027231004 (Mengerjakan soal 4)
+3. Muhamad Rizq Taufan 5027231021 (Mengerjakan soal 3)
 
 ## NOMOR 1
 
@@ -82,6 +82,10 @@ echo "Purchase date dan amount (quantity) dari nama Adriaens: $adriaens"
 
 ```
 Perintah di atas menggunakan perintah awk untuk memproses file database dan mencari entri yang terkait dengan penjual yang memiliki nama "Adriaens" pada kolom ke-6. Pertama-tama, kita menggunakan opsi -F ',' untuk menetapkan bahwa koma (,) adalah pemisah antar kolom dalam setiap baris. Kemudian, dengan menggunakan $6 ~ /Adriaens/, kita menyaring baris-baris di mana kolom ke-6 (mungkin berisi nama penjual) sesuai dengan pola "Adriaens". Setelah menyaring baris-baris yang sesuai, kita menggunakan print $2, $18 untuk mencetak kolom ke-2 (mungkin berisi informasi terkait dengan produk atau layanan) dan kolom ke-18 (mungkin berisi informasi terkait dengan jumlah penjualan atau profit).
+
+## Sample Input and Output
+
+![Screenshot from 2024-03-30 16-11-25](https://github.com/Ax3lrod/Sisop-1-2024-MH-IT17/assets/150204139/2b2c4077-77d4-4c17-b910-3df2af9c13dc)
 
 ## NOMOR 2
 
@@ -814,6 +818,40 @@ Jika user menginput angka untuk command selain 1 dan 2 maka program akan berhent
 
 Program selesai.
 
+## Sample Input and Output
+
+1. Registrasi user menggunakan register.sh
+
+![Screenshot from 2024-03-30 16-13-54](https://github.com/Ax3lrod/Sisop-1-2024-MH-IT17/assets/150204139/a33b4474-87e4-4185-ba2c-51af0c72eeac)
+
+2. Reset password menggunakan login.sh
+
+![Screenshot from 2024-03-30 16-14-50](https://github.com/Ax3lrod/Sisop-1-2024-MH-IT17/assets/150204139/6d70673e-33c5-4bf4-a1e5-370e741aaf2f)
+
+3. Login user tanpa privilege admin
+
+![Screenshot from 2024-03-30 16-15-47](https://github.com/Ax3lrod/Sisop-1-2024-MH-IT17/assets/150204139/cb553ace-dd2b-4c2f-b51e-1b6d3bc5e0d9)
+
+4. Login user admin dan menjalankan command add user
+
+![Screenshot from 2024-03-30 16-19-38](https://github.com/Ax3lrod/Sisop-1-2024-MH-IT17/assets/150204139/d6f0dea9-46de-4075-a6dc-3f20b0b55901)
+
+5. Login user admin dan menjalankan command edit user
+
+![Screenshot from 2024-03-30 16-30-42](https://github.com/Ax3lrod/Sisop-1-2024-MH-IT17/assets/150204139/f80428b5-56e6-43d2-a7f4-283262181f18)
+
+6. Login user admin dan menjalankan command delete user
+
+![Screenshot from 2024-03-30 16-32-44](https://github.com/Ax3lrod/Sisop-1-2024-MH-IT17/assets/150204139/b687e608-0889-4615-bc6d-c5e7da85e552)
+
+7. Tampilan isi users.txt
+
+![Screenshot from 2024-03-30 16-32-56](https://github.com/Ax3lrod/Sisop-1-2024-MH-IT17/assets/150204139/526e196f-cd94-41b8-87e8-0d4dbb7a6dfc)
+
+8. Tampilan isi auth.log
+
+![Screenshot from 2024-03-30 16-33-05](https://github.com/Ax3lrod/Sisop-1-2024-MH-IT17/assets/150204139/f1ec8109-90b8-4d74-bddf-c18b875e90e3)
+
 ## NOMOR 3
 
   Alyss adalah seorang gamer yang sangat menyukai bermain game Genshin Impact. Karena hobinya, dia ingin mengoleksi foto-foto karakter Genshin Impact. Suatu saat Yanuar memberikannya sebuah Link yang berisi koleksi kumpulan foto karakter dan sebuah clue yang mengarah ke penemuan gambar rahasia. Ternyata setiap nama file telah dienkripsi dengan menggunakan hexadecimal. Karena penasaran dengan apa yang dikatakan Yanuar, Alyss tidak menyerah dan mencoba untuk mengembalikan nama file tersebut kembali seperti semula.
@@ -1117,3 +1155,247 @@ chmod 600 "$log_file"
 ```
 - Mengatur *permission* untuk *file_log*.
 - 600 bermakna 6 (pemilik file berhak untuk membaca dan menulis file), 0 (grup tidak memiliki hak apapun), dan 0 (pengguna lain juga tidak memiliki hak apapun).
+
+## Revisi
+
+1. Soal 2: Revisi error logika di login.sh bagian edit_user, untuk memeriksa apakah email ada di database atau tidak.
+
+Code sebelum direvisi:
+
+```
+echo "Edit an existing user"
+
+        echo "Enter the email of the user you want to edit:"
+        read ed_email
+
+        mapfile -t users_array < users.txt
+
+        for line in "${users_array[@]}"; do
+            
+          IFS=':' read -r db_email db_username db_question db_answer db_password <<< "$line"
+
+          if [[ $ed_email == $db_email ]]; then
+
+            echo "Do you want to change your email address? [y/n]"
+            read change_email
+
+            if [[ $change_email == "y" ]]; then
+
+              while true; do
+
+                echo "Enter your email:"
+                read new_email
+
+                if [[ $new_email =~ ^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9]+\.[a-zA-Z]+$ ]]; then
+
+                  if grep -q "$new_email" users.txt; then
+
+                    echo "Email already exists. Try again."
+
+                  else
+
+                    break
+
+                  fi
+
+                else
+
+                  echo "Invalid email address. Try again."
+
+                fi
+
+              done
+
+            fi
+
+            while true; do
+            
+              echo "Enter new username:"
+              read new_username
+
+              if grep -q "^$new_username:" users.txt; then
+
+                echo "Username already exists. Try again."
+
+              else
+
+                break
+
+              fi
+
+            done
+
+            echo "Enter a new security question:"
+            read new_secquest
+
+            echo "Enter the new answer to your security question:"
+            read new_answer
+
+            while true; do
+
+              echo "Enter a new password (8 characters minimum, at least 1 uppercase letter, at least 1 lowercase letter, at least 1 digit, at least 1 symbol, and not 
+              the same as your username, birthdate, or email address)"
+
+              read -s new_password
+
+              if [[ ${#new_password} -ge 8 && "$new_password" =~ [[:lower:]] && "$new_password" =~ [[:upper:]] && "$new_password" =~ [[:digit:]] ]]; then
+                
+                break
+
+              else
+              
+                echo "Password is too weak. Try again."
+
+              fi
+
+            done
+
+            new_password=$(echo -n "$new_password" | base64)
+
+            if [[ $change_email == "y" ]]; then
+
+              sed -i "/$ed_email/c\\$new_email:$new_username:$new_secquest:$new_answer:$new_password" users.txt
+              echo "$(date +'%d/%m/%y %H:%M:%S') USER UPDATE SUCCESS User data with email $ed_email updated successfully." >> auth.log
+              echo "User data updated successfully."
+
+            else
+
+              sed -i "/$ed_email/c\\$ed_email:$new_username:$new_secquest:$new_answer:$new_password" users.txt
+              echo "$(date +'%d/%m/%y %H:%M:%S') USER UPDATE SUCCESS User data with email $ed_email updated successfully." >> auth.log
+              echo "User data updated successfully."
+
+            fi
+
+          else
+
+            echo "Email not registered."
+
+          fi
+
+        done
+
+```
+
+Code setelah direvisi:
+
+```
+echo "Edit an existing user"
+
+        echo "Enter the email of the user you want to edit:"
+        read ed_email
+
+        # penambahan flag email_found=false sebelum membaca database
+        email_found=false 
+
+        mapfile -t users_array < users.txt
+
+        for line in "${users_array[@]}"; do
+            
+          IFS=':' read -r db_email db_username db_question db_answer db_password <<< "$line"
+
+          if [[ $ed_email == $db_email ]]; then
+
+            # mengubah flag menjadi email_found=true jika email yang diinput ditemukan di database
+            email_found=true
+
+            echo "Do you want to change your email address? [y/n]"
+            read change_email
+
+            if [[ $change_email == "y" ]]; then
+
+              while true; do
+
+                echo "Enter your email:"
+                read new_email
+
+                if [[ $new_email =~ ^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9]+\.[a-zA-Z]+$ ]]; then
+
+                  if grep -q "$new_email" users.txt; then
+
+                    echo "Email already exists. Try again."
+
+                  else
+
+                    break
+
+                  fi
+
+                else
+
+                  echo "Invalid email address. Try again."
+
+                fi
+
+              done
+
+            fi
+
+            while true; do
+            
+              echo "Enter new username:"
+              read new_username
+
+              if grep -q "^$new_username:" users.txt; then
+
+                echo "Username already exists. Try again."
+
+              else
+
+                break
+
+              fi
+
+            done
+
+            echo "Enter a new security question:"
+            read new_secquest
+
+            echo "Enter the new answer to your security question:"
+            read new_answer
+
+            while true; do
+
+              echo "Enter a new password (8 characters minimum, at least 1 uppercase letter, at least 1 lowercase letter, at least 1 digit, at least 1 symbol, and not 		      the same as your username, birthdate, or email address)"
+
+              read -s new_password
+
+              if [[ ${#new_password} -ge 8 && "$new_password" =~ [[:lower:]] && "$new_password" =~ [[:upper:]] && "$new_password" =~ [[:digit:]] ]]; then
+                
+                break
+
+              else
+              
+                echo "Password is too weak. Try again."
+
+              fi
+
+            done
+
+            new_password=$(echo -n "$new_password" | base64)
+
+            if [[ $change_email == "y" ]]; then
+
+              sed -i "/$ed_email/c\\$new_email:$new_username:$new_secquest:$new_answer:$new_password" users.txt
+              echo "$(date +'%d/%m/%y %H:%M:%S') USER UPDATE SUCCESS User data with email $ed_email updated successfully." >> auth.log
+              echo "User data updated successfully."
+
+            else
+
+              sed -i "/$ed_email/c\\$ed_email:$new_username:$new_secquest:$new_answer:$new_password" users.txt
+              echo "$(date +'%d/%m/%y %H:%M:%S') USER UPDATE SUCCESS User data with email $ed_email updated successfully." >> auth.log
+              echo "User data updated successfully."
+
+            fi
+
+          fi
+
+        done
+
+        # jika email yang diinput tidak ditemukan di database maka flag email_found tetap bernilai false maka akan menampilkan pesan "Email not registered."
+        if [[ $email_found == false ]]; then
+
+          echo "Email not registered."
+
+        fi
+
+```
